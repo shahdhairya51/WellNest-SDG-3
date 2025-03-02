@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDG 3 Project Classification Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        form div {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="url"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .checkbox-group {
+            margin-bottom: 5px;
+        }
+        
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        
+        #statusMessage {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .loading {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        #readmePreview {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>SDG 3 Project Classification and Impact Assessment</h1>
+
+    <div id="statusMessage" style="display: none;"></div>
+
+    <form id="projectForm">
+        <!-- Project information fields -->
+        <div>
+            <label for="projectName">Name of the open-source project</label>
+            <input type="text" id="projectName" name="projectName" required>
+        </div>
+        <div>
+            <label for="projectDescription">Brief description of the project</label>
+            <input type="text" id="projectDescription" name="projectDescription" required>
+        </div>
+        <div>
+            <label for="projectURL">GitHub repository URL</label>
+            <input type="url" id="projectURL" name="projectURL" placeholder="https://github.com/username/repo" required>
+            <div style="margin-top: 10px;">
+                <button type="button" id="fetchReadmeBtn">Fetch README</button>
+                <button type="button" id="analyzeReadmeBtn">Analyze with AI</button>
+            </div>
+        </div>
+
+        <div id="readmePreview">
+            <!-- README content will be displayed here -->
+        </div>
+
+        <!-- Dynamic form elements will be inserted here -->
+        <div id="formFields"></div>
+    </form>
+
+    <button type="button" id="generateJSONBtn">Generate JSON</button>
+
+    <h3>Generated JSON:</h3>
+    <pre id="jsonOutput"></pre>
+
+    <script>
+        // JSON schema definition
+        const schema = {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "title": "SDG 3 Project Classification and Impact Assessment Form",
+            "description": "A JSON schema for identifying and categorizing open-source projects that contribute to UN Sustainable Development Goal 3 (Good Health and Well-Being) using Form.io.",
+            "type": "object",
+            "properties": {
+                "projectName": {
+                    "type": "string",
+                    "description": "Name of the open-source project"
+                },
+                "projectDescription": {
+                    "type": "string",
+                    "description": "Brief description of the project"
+                },
+                "projectURL": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "GitHub repository or project website URL"
+                },
+                "healthFocusAreas": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Mental Health",
+                            "Healthcare Access",
+                            "Disease Prevention",
+                            "Nutrition & Wellness",
+                            "Emergency Response",
+                            "Medical Research",
+                            "Infectious Disease Control"
+                        ]
+                    },
+                    "description": "Areas of health the project focuses on (multi-select)"
+                },
+                "sdg3Targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "3.1 Reduce maternal mortality",
+                            "3.2 End preventable newborn and child deaths",
+                            "3.3 End epidemics (AIDS, TB, malaria, etc.)",
+                            "3.4 Reduce non-communicable diseases",
+                            "3.5 Strengthen mental health services",
+                            "3.6 Reduce road traffic accident deaths",
+                            "3.9 Reduce exposure to hazardous chemicals and pollution"
+                        ]
+                    },
+                    "description": "Specific SDG 3 targets addressed by the project"
+                },
+                "technologiesUsed": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Web Application",
+                            "Mobile Application",
+                            "AI/ML Model",
+                            "Database System",
+                            "Data Visualization",
+                            "Biomedical Device"
+                        ]
+                    },
+                    "description": "Technologies used in the project (multi-select)"
+                },
+                "targetAudience": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Healthcare Providers",
+                            "General Public",
+                            "Researchers",
+                            "Government Agencies",
+                            "Non-profits & NGOs"
+                        ]
+                    },
+                    "description": "Who benefits from this project? (multi-select)"
+                },
+                "isDeployed": {
+                    "type": "boolean",
+                    "description": "Is the project currently in use?"
+                },
+                "deploymentLocation": {
+                    "type": "string",
+                    "description": "Where is the project being used?",
+                    "nullable": true
+                }
+            },
+            "required": ["projectName", "projectDescription", "projectURL"],
+            "additionalProperties": false
+        };
+
+        // Global variable to store README content
+        let readmeContent = '';
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = type;
+            statusEl.style.display = 'block';
+            
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function generateForm(schema) {
+            const formFields = document.getElementById('formFields');
+            formFields.innerHTML = ''; // Clear existing fields
+
+            // Skip the first three fields as they're already defined statically
+            const skipFields = ['projectName', 'projectDescription', 'projectURL'];
+
+            for (let field in schema.properties) {
+                if (skipFields.includes(field)) continue;
+                
+                const fieldData = schema.properties[field];
+
+                // Create a field wrapper div
+                const fieldWrapper = document.createElement('div');
+                fieldWrapper.style.marginBottom = '20px';
+
+                // Create label for the field
+                const label = document.createElement('label');
+                label.setAttribute('for', field);
+                label.textContent = fieldData.description || field;
+                fieldWrapper.appendChild(label);
+
+                if (fieldData.type === "array") {
+                    // For array fields, create checkboxes
+                    fieldData.items.enum.forEach(option => {
+                        const checkboxWrapper = document.createElement('div');
+                        checkboxWrapper.className = 'checkbox-group';
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = "checkbox";
+                        checkbox.id = `${field}_${option.replace(/\s+/g, '_').replace(/[^\w\s]/g, '')}`;
+                        checkbox.name = field;
+                        checkbox.value = option;
+
+                        const checkboxLabel = document.createElement('label');
+                        checkboxLabel.setAttribute('for', `${field}_${option.replace(/\s+/g, '_').replace(/[^\w\s]/g, '')}`);
+                        checkboxLabel.textContent = option;
+                        checkboxLabel.style.display = 'inline';
+                        checkboxLabel.style.fontWeight = 'normal';
+                        checkboxLabel.style.marginLeft = '5px';
+
+                        checkboxWrapper.appendChild(checkbox);
+                        checkboxWrapper.appendChild(checkboxLabel);
+                        fieldWrapper.appendChild(checkboxWrapper);
+                    });
+                } else if (fieldData.type === "boolean") {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = "checkbox";
+                    checkbox.id = field;
+                    checkbox.name = field;
+                    fieldWrapper.appendChild(checkbox);
+                } else if (fieldData.type === "string" && field === "deploymentLocation") {
+                    const input = document.createElement('input');
+                    input.type = "text";
+                    input.id = field;
+                    input.name = field;
+                    fieldWrapper.appendChild(input);
+                }
+
+                // Append the field wrapper to the form
+                formFields.appendChild(fieldWrapper);
+            }
+        }
+
+        function generateJSON() {
+            const formData = new FormData(document.getElementById('projectForm'));
+            const formValues = {};
+
+            // Process basic text fields
+            formValues.projectName = document.getElementById('projectName').value;
+            formValues.projectDescription = document.getElementById('projectDescription').value;
+            formValues.projectURL = document.getElementById('projectURL').value;
+
+            // For multi-select checkbox fields
+            const checkboxFields = [
+                'healthFocusAreas',
+                'sdg3Targets',
+                'technologiesUsed',
+                'targetAudience'
+            ];
+
+            checkboxFields.forEach(field => {
+                const checkboxes = document.querySelectorAll(`input[name="${field}"]:checked`);
+                const selectedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
+                formValues[field] = selectedValues;
+            });
+
+            // For boolean field
+            formValues.isDeployed = document.getElementById('isDeployed').checked;
+            
+            // For optional text field
+            formValues.deploymentLocation = document.getElementById('deploymentLocation').value || "";
+
+            // Display the generated JSON
+            document.getElementById('jsonOutput').textContent = JSON.stringify(formValues, null, 2);
+        }
+
+        async function fetchReadme() {
+            const projectURL = document.getElementById('projectURL').value;
+            
+            if (!projectURL) {
+                showStatus('Please enter a valid GitHub project URL.', 'error');
+                return null;
+            }
+
+            // Validate GitHub URL format
+            if (!projectURL.includes('github.com')) {
+                showStatus('Please enter a valid GitHub repository URL.', 'error');
+                return null;
+            }
+
+            showStatus('Fetching README...', 'loading');
+
+            try {
+                // Fetch README content through our proxy
+                const response = await fetch(`/api/fetch-readme?url=${encodeURIComponent(projectURL)}`);
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Failed to fetch README: ${response.statusText} - ${errorData.message || ''}`);
+                }
+                
+                const data = await response.json();
+                console.log('README content fetched successfully');
+                
+                // Store README content in global variable
+                readmeContent = data.content;
+                
+                // Show README preview
+                const readmePreview = document.getElementById('readmePreview');
+                readmePreview.textContent = readmeContent;
+                readmePreview.style.display = 'block';
+                
+                showStatus('README successfully fetched!', 'success');
+                return readmeContent;
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus(`Error: ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        async function analyzeReadme() {
+            // If we don't have README content, try to fetch it first
+            if (!readmeContent) {
+                const content = await fetchReadme();
+                if (!content) return; // Exit if fetch failed
+            }
+
+            showStatus('Analyzing README...', 'loading');
+
+            try {
+                // Send the README content for analysis
+                const response = await fetch('/api/analyze-readme', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ readmeText: readmeContent }),
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Analysis failed: ${response.statusText} - ${errorData.message || ''}`);
+                }
+                
+                const analysis = await response.json();
+                console.log('Analysis results:', analysis);
+                
+                // Auto-fill form with the analysis results
+                fillFormWithAnalysisResults(analysis);
+                
+                showStatus('README successfully analyzed and form filled!', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function fillFormWithAnalysisResults(analysis) {
+            // First, clear all checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Fill checkboxes based on analysis results
+            if (analysis.healthFocusAreas && analysis.healthFocusAreas.length > 0) {
+                analysis.healthFocusAreas.forEach(area => {
+                    const id = `healthFocusAreas_${area.replace(/\s+/g, '_').replace(/[^\w\s]/g, '')}`;
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+            
+            if (analysis.sdg3Targets && analysis.sdg3Targets.length > 0) {
+                analysis.sdg3Targets.forEach(target => {
+                    const sanitizedTarget = target.replace(/\s+/g, '_').replace(/[^\w\s]/g, '');
+                    const checkbox = document.getElementById(`sdg3Targets_${sanitizedTarget}`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+            
+            if (analysis.technologiesUsed && analysis.technologiesUsed.length > 0) {
+                analysis.technologiesUsed.forEach(tech => {
+                    const id = `technologiesUsed_${tech.replace(/\s+/g, '_').replace(/[^\w\s]/g, '')}`;
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+            
+            if (analysis.targetAudience && analysis.targetAudience.length > 0) {
+                analysis.targetAudience.forEach(audience => {
+                    const id = `targetAudience_${audience.replace(/\s+/g, '_').replace(/[^\w\s]/g, '')}`;
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+            
+            // Set the boolean value
+            const isDeployedCheckbox = document.getElementById('isDeployed');
+            if (isDeployedCheckbox && analysis.isDeployed !== undefined) {
+                isDeployedCheckbox.checked = analysis.isDeployed;
+            }
+            
+            // Set the deployment location
+            const deploymentLocationInput = document.getElementById('deploymentLocation');
+            if (deploymentLocationInput && analysis.deploymentLocation) {
+                deploymentLocationInput.value = analysis.deploymentLocation;
+            }
+        }
+
+        // Initialize the page
+        window.onload = function() {
+            generateForm(schema);
+            
+            // Event listeners
+            document.getElementById('fetchReadmeBtn').addEventListener('click', fetchReadme);
+            document.getElementById('analyzeReadmeBtn').addEventListener('click', analyzeReadme);
+            document.getElementById('generateJSONBtn').addEventListener('click', generateJSON);
+        };
+    </script>
+</body>
+
+</html>
