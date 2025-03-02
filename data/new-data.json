@@ -1,0 +1,15 @@
+{
+  "name": "Example Project",
+  "version": "1.0.0",
+  "description": "This is an example JSON file",
+  "features": [
+    "Feature 1",
+    "Feature 2",
+    "Feature 3"
+  ],
+  "settings": {
+    "enabled": true,
+    "timeout": 30,
+    "retryCount": 3
+  }
+}
