@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SDG 3 Project Dashboard</title>
+    <title>SDG 3 Projects Dashboard</title>
     <style>
         :root {
             --primary-color: #4285F4;
@@ -72,44 +72,34 @@
             font-weight: 600;
         }
         
-        .dashboard-container {
+        .projects-grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 1.5rem;
             margin: 2rem auto;
         }
         
-        .dashboard-card {
+        .project-card {
             background: white;
             border-radius: var(--radius);
             box-shadow: var(--shadow-sm);
-            padding: 1.5rem;
             transition: box-shadow 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         
-        .dashboard-card:hover {
+        .project-card:hover {
             box-shadow: var(--shadow-md);
         }
         
-        .card-full {
-            grid-column: span 12;
-        }
-        
-        .card-half {
-            grid-column: span 6;
-        }
-        
-        .card-third {
-            grid-column: span 4;
-        }
-        
-        .project-info {
-            border-left: 4px solid var(--primary-color);
-            padding-left: 1rem;
+        .project-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .project-title {
-            font-size: 1.75rem;
+            font-size: 1.25rem;
             margin-bottom: 0.5rem;
             color: var(--text-primary);
             font-weight: 600;
@@ -117,8 +107,8 @@
         
         .project-description {
             color: var(--text-secondary);
+            font-size: 0.9rem;
             margin-bottom: 1rem;
-            font-size: 1rem;
         }
         
         .project-url {
@@ -127,6 +117,7 @@
             color: var(--primary-color);
             text-decoration: none;
             font-weight: 500;
+            font-size: 0.875rem;
         }
         
         .project-url:hover {
@@ -139,47 +130,51 @@
             height: 16px;
         }
         
-        .card-title {
-            font-size: 1.25rem;
+        .project-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            flex-grow: 1;
+        }
+        
+        .info-section {
             margin-bottom: 1rem;
-            color: var(--text-primary);
+        }
+        
+        .section-title {
+            font-size: 0.875rem;
             font-weight: 600;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .tag-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-top: 1rem;
+            gap: 0.5rem;
         }
         
         .tag {
             display: inline-flex;
             align-items: center;
-            padding: 0.375rem 0.75rem;
+            padding: 0.25rem 0.5rem;
             background-color: var(--bg-light);
             border-radius: 16px;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             font-weight: 500;
-        }
-        
-        .tag-icon {
-            margin-right: 0.5rem;
-            width: 14px;
-            height: 14px;
         }
         
         .deployment-status {
             display: flex;
             align-items: center;
-            margin-top: 1rem;
         }
         
         .status-indicator {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             margin-right: 0.5rem;
         }
@@ -194,135 +189,60 @@
         
         .status-text {
             font-size: 0.875rem;
-            font-weight: 500;
         }
         
         .deployment-location {
-            margin-top: 0.5rem;
+            font-size: 0.875rem;
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            margin-top: 0.25rem;
         }
         
-        .chart-container {
-            height: 250px;
-            position: relative;
+        .search-filter-section {
+            background-color: white;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
         }
         
-        .chart-legend {
+        .search-container {
             display: flex;
-            flex-wrap: wrap;
             gap: 1rem;
-            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
         
-        .legend-item {
-            display: flex;
-            align-items: center;
+        .search-input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
             font-size: 0.875rem;
         }
         
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-            margin-right: 0.5rem;
-        }
-        
-        .chart-bar {
+        .filter-container {
             display: flex;
-            height: 100%;
-            align-items: flex-end;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
         
-        .chart-column {
-            flex: 1;
-            margin: 0 0.25rem;
+        .filter-group {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            gap: 0.5rem;
         }
         
-        .chart-column-bar {
-            width: 100%;
-            background-color: var(--chart-color-1);
-            border-radius: 4px 4px 0 0;
-            transition: height 0.5s ease;
-        }
-        
-        .chart-column-label {
-            margin-top: 0.5rem;
+        .filter-label {
             font-size: 0.75rem;
+            font-weight: 600;
             color: var(--text-secondary);
-            text-align: center;
         }
         
-        .doughnut-chart {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 0 auto;
-        }
-        
-        .doughnut-segment {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            clip: rect(0, 100px, 200px, 0);
-        }
-        
-        .doughnut-center {
-            position: absolute;
-            top: 25%;
-            left: 25%;
-            width: 50%;
-            height: 50%;
-            border-radius: 50%;
-            background-color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-        
-        .sdg-targets-list {
-            list-style: none;
-            margin-top: 1rem;
-        }
-        
-        .sdg-target-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 0.75rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .sdg-target-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        .sdg-target-marker {
-            min-width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-right: 1rem;
-        }
-        
-        .sdg-target-text {
-            font-size: 0.9rem;
-            line-height: 1.4;
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            min-width: 150px;
         }
         
         .btn {
@@ -348,126 +268,33 @@
             background-color: var(--primary-hover);
         }
         
-        .btn-icon {
-            margin-right: 0.5rem;
-            width: 16px;
-            height: 16px;
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
         }
         
-        .health-focus-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .health-focus-item {
+        .btn-secondary:hover {
             background-color: var(--bg-light);
-            border-left: 3px solid var(--chart-color-1);
-            padding: 0.75rem;
-            border-radius: 0 var(--radius) var(--radius) 0;
         }
         
-        .health-focus-item:nth-child(2) {
-            border-left-color: var(--chart-color-2);
-        }
-        
-        .health-focus-item:nth-child(3) {
-            border-left-color: var(--chart-color-3);
-        }
-        
-        .health-focus-item:nth-child(4) {
-            border-left-color: var(--chart-color-4);
-        }
-        
-        .health-focus-item:nth-child(5) {
-            border-left-color: var(--chart-color-5);
-        }
-        
-        .health-focus-item:nth-child(6) {
-            border-left-color: var(--chart-color-6);
-        }
-        
-        .health-focus-item:nth-child(7) {
-            border-left-color: var(--chart-color-7);
-        }
-        
-        .technologies-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .technology-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--bg-light);
-            padding: 1rem;
-            border-radius: var(--radius);
-            width: calc(33.333% - 0.667rem);
+        .no-results {
             text-align: center;
-        }
-        
-        .technology-icon {
-            width: 32px;
-            height: 32px;
-            margin-bottom: 0.5rem;
-        }
-        
-        .technology-name {
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
-        .audience-chart {
-            display: flex;
-            height: 24px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 1.5rem;
-        }
-        
-        .audience-segment {
-            height: 100%;
-        }
-        
-        .audience-segment:first-child {
-            border-radius: 12px 0 0 12px;
-        }
-        
-        .audience-segment:last-child {
-            border-radius: 0 12px 12px 0;
-        }
-        
-        @media (max-width: 1024px) {
-            .card-third {
-                grid-column: span 6;
-            }
+            padding: 3rem;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
         }
         
         @media (max-width: 768px) {
-            .dashboard-container {
-                grid-template-columns: 1fr;
+            .search-container, .filter-container {
+                flex-direction: column;
             }
             
-            .card-half, .card-third {
-                grid-column: span 12;
+            .filter-group {
+                width: 100%;
             }
             
-            .health-focus-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .technology-item {
-                width: calc(50% - 0.5rem);
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .technology-item {
+            .filter-select {
                 width: 100%;
             }
         }
@@ -478,9 +305,9 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <h1 class="page-title">SDG 3 Project Dashboard</h1>
+                <h1 class="page-title">SDG 3 Projects Dashboard</h1>
                 <a href="#" class="btn btn-primary">
-                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; margin-right: 0.5rem;">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                     Export Report
@@ -490,229 +317,419 @@
     </header>
 
     <div class="container">
-        <div class="dashboard-container">
-            <!-- Project Information Card -->
-            <div class="dashboard-card card-full">
-                <div class="project-info">
-                    <h2 class="project-title">OpenMRS</h2>
-                    <p class="project-description">An open-source medical record system platform for developing countries focusing on supporting the delivery of healthcare in resource-constrained environments.</p>
-                    <a href="https://github.com/openmrs/openmrs-core" target="_blank" class="project-url">
-                        <svg class="project-url-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                        </svg>
-                        github.com/openmrs/openmrs-core
-                    </a>
+        <div class="search-filter-section">
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search projects...">
+                <button id="searchButton" class="btn btn-primary">Search</button>
+                <button id="resetButton" class="btn btn-secondary">Reset</button>
+            </div>
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label class="filter-label">Health Focus</label>
+                    <select id="healthFocusFilter" class="filter-select">
+                        <option value="">All Health Focus Areas</option>
+                        <option value="Disease Prevention">Disease Prevention</option>
+                        <option value="Nutrition & Wellness">Nutrition & Wellness</option>
+                        <option value="Healthcare Access">Healthcare Access</option>
+                        <option value="Medical Research">Medical Research</option>
+                        <option value="Infectious Disease Control">Infectious Disease Control</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">SDG Target</label>
+                    <select id="sdgTargetFilter" class="filter-select">
+                        <option value="">All SDG Targets</option>
+                        <option value="3.4">3.4 Reduce non-communicable diseases</option>
+                        <option value="3.9">3.9 Reduce exposure to hazardous chemicals</option>
+                        <option value="3.1">3.1 Reduce maternal mortality</option>
+                        <option value="3.2">3.2 End preventable child deaths</option>
+                        <option value="3.3">3.3 End epidemics</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Technology</label>
+                    <select id="technologyFilter" class="filter-select">
+                        <option value="">All Technologies</option>
+                        <option value="AI/ML Model">AI/ML Model</option>
+                        <option value="Database System">Database System</option>
+                        <option value="Web Application">Web Application</option>
+                        <option value="Mobile App">Mobile App</option>
+                        <option value="Data Visualization">Data Visualization</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Deployment Status</label>
+                    <select id="deploymentFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="true">Deployed</option>
+                        <option value="false">Not Deployed</option>
+                    </select>
                 </div>
             </div>
+        </div>
 
-            <!-- Health Focus Areas Card -->
-            <div class="dashboard-card card-half">
-                <h3 class="card-title">Health Focus Areas</h3>
-                <div class="health-focus-grid">
-                    <div class="health-focus-item">
-                        <span>Healthcare Access</span>
-                    </div>
-                    <div class="health-focus-item">
-                        <span>Disease Prevention</span>
-                    </div>
-                    <div class="health-focus-item">
-                        <span>Medical Research</span>
-                    </div>
-                    <div class="health-focus-item">
-                        <span>Infectious Disease Control</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Deployment Status Card -->
-            <div class="dashboard-card card-half">
-                <h3 class="card-title">Deployment Status</h3>
-                <div class="deployment-status">
-                    <span class="status-indicator active"></span>
-                    <span class="status-text">Active - Currently Deployed</span>
-                </div>
-                <p class="deployment-location">
-                    Deployed in: Over 40 countries across Africa, Asia, and Latin America, including Kenya, Rwanda, Uganda, Mozambique, Bangladesh, and Haiti
-                </p>
-            </div>
-
-            <!-- SDG 3 Targets Card -->
-            <div class="dashboard-card card-half">
-                <h3 class="card-title">SDG 3 Targets Addressed</h3>
-                <ul class="sdg-targets-list">
-                    <li class="sdg-target-item">
-                        <div class="sdg-target-marker">3.1</div>
-                        <div class="sdg-target-text">Reduce maternal mortality</div>
-                    </li>
-                    <li class="sdg-target-item">
-                        <div class="sdg-target-marker">3.2</div>
-                        <div class="sdg-target-text">End preventable newborn and child deaths</div>
-                    </li>
-                    <li class="sdg-target-item">
-                        <div class="sdg-target-marker">3.3</div>
-                        <div class="sdg-target-text">End epidemics (AIDS, TB, malaria, etc.)</div>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Technologies Used Card -->
-            <div class="dashboard-card card-half">
-                <h3 class="card-title">Technologies Used</h3>
-                <div class="technologies-container">
-                    <div class="technology-item">
-                        <svg class="technology-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                            <line x1="8" y1="21" x2="16" y2="21"></line>
-                            <line x1="12" y1="17" x2="12" y2="21"></line>
-                        </svg>
-                        <span class="technology-name">Web Application</span>
-                    </div>
-                    <div class="technology-item">
-                        <svg class="technology-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                            <path d="M2 17l10 5 10-5"></path>
-                            <path d="M2 12l10 5 10-5"></path>
-                        </svg>
-                        <span class="technology-name">Database System</span>
-                    </div>
-                    <div class="technology-item">
-                        <svg class="technology-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                        </svg>
-                        <span class="technology-name">Data Visualization</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Target Audience Card -->
-            <div class="dashboard-card card-third">
-                <h3 class="card-title">Target Audience</h3>
-                <div class="tag-container">
-                    <div class="tag">
-                        <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                        </svg>
-                        Healthcare Providers
-                    </div>
-                    <div class="tag">
-                        <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        Researchers
-                    </div>
-                    <div class="tag">
-                        <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                        </svg>
-                        Government Agencies
-                    </div>
-                    <div class="tag">
-                        <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        Non-profits & NGOs
-                    </div>
-                </div>
-                <div class="audience-chart">
-                    <div class="audience-segment" style="background-color: var(--chart-color-1); width: 40%;"></div>
-                    <div class="audience-segment" style="background-color: var(--chart-color-2); width: 25%;"></div>
-                    <div class="audience-segment" style="background-color: var(--chart-color-3); width: 20%;"></div>
-                    <div class="audience-segment" style="background-color: var(--chart-color-4); width: 15%;"></div>
-                </div>
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--chart-color-1);"></span>
-                        <span>Healthcare Providers</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--chart-color-2);"></span>
-                        <span>Researchers</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--chart-color-3);"></span>
-                        <span>Government</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--chart-color-4);"></span>
-                        <span>NGOs</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Project Impact Card -->
-            <div class="dashboard-card card-third">
-                <h3 class="card-title">Project Impact</h3>
-                <div class="chart-container">
-                    <div class="chart-bar">
-                        <div class="chart-column">
-                            <div class="chart-column-bar" style="height: 60%; background-color: var(--chart-color-1);"></div>
-                            <span class="chart-column-label">2020</span>
-                        </div>
-                        <div class="chart-column">
-                            <div class="chart-column-bar" style="height: 75%; background-color: var(--chart-color-1);"></div>
-                            <span class="chart-column-label">2021</span>
-                        </div>
-                        <div class="chart-column">
-                            <div class="chart-column-bar" style="height: 85%; background-color: var(--chart-color-1);"></div>
-                            <span class="chart-column-label">2022</span>
-                        </div>
-                        <div class="chart-column">
-                            <div class="chart-column-bar" style="height: 95%; background-color: var(--chart-color-1);"></div>
-                            <span class="chart-column-label">2023</span>
-                        </div>
-                        <div class="chart-column">
-                            <div class="chart-column-bar" style="height: 100%; background-color: var(--chart-color-1);"></div>
-                            <span class="chart-column-label">2024</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--chart-color-1);"></span>
-                        <span>Deployment Growth</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SDG Progress Card -->
-            <div class="dashboard-card card-third">
-                <h3 class="card-title">SDG Progress Contribution</h3>
-                <div class="doughnut-chart">
-                    <div class="doughnut-segment" style="background-color: var(--chart-color-1); transform: rotate(0deg);"></div>
-                    <div class="doughnut-segment" style="background-color: var(--chart-color-2); transform: rotate(90deg);"></div>
-                    <div class="doughnut-segment" style="background-color: var(--chart-color-3); transform: rotate(180deg);"></div>
-                    <div class="doughnut-segment" style="background-color: var(--chart-color-4); transform: rotate(270deg);"></div>
-                    <div class="doughnut-center">75%</div>
-                </div>
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--chart-color-1);"></span>
-                        <span>Target 3.1</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--chart-color-2);"></span>
-                        <span>Target 3.2</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--chart-color-3);"></span>
-                        <span>Target 3.3</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--chart-color-4);"></span>
-                        <span>Other</span>
-                    </div>
-                </div>
-            </div>
+        <div id="projectsGrid" class="projects-grid">
+            <!-- Projects will be populated here by JavaScript -->
         </div>
     </div>
 
     <script>
-        // This script would typically contain code to fetch data from an API
-        // and dynamically populate the dashboard with project data
+        // Sample project data (your JSON)
+        const projectsData = {
+            "projects": [
+                {
+                    "projectName": "Health Monitor Pro",
+                    "projectDescription": "A comprehensive health monitoring system for tracking patient vitals and disease progression",
+                    "projectURL": "https://github.com/health-monitor-pro",
+                    "healthFocusAreas": [
+                        "Disease Prevention",
+                        "Nutrition & Wellness"
+                    ],
+                    "sdg3Targets": [
+                        "3.4 Reduce non-communicable diseases",
+                        "3.9 Reduce exposure to hazardous chemicals and pollution"
+                    ],
+                    "technologiesUsed": [
+                        "AI/ML Model",
+                        "Database System"
+                    ],
+                    "targetAudience": [
+                        "Healthcare Providers"
+                    ],
+                    "isDeployed": false,
+                    "deploymentLocation": "China"
+                },
+                {
+                    "projectName": "NutriCare",
+                    "projectDescription": "Personalized nutrition platform focused on preventive healthcare",
+                    "projectURL": "https://github.com/nutricare",
+                    "healthFocusAreas": [
+                        "Nutrition & Wellness",
+                        "Disease Prevention"
+                    ],
+                    "sdg3Targets": [
+                        "3.4 Reduce non-communicable diseases"
+                    ],
+                    "technologiesUsed": [
+                        "Mobile App",
+                        "AI/ML Model"
+                    ],
+                    "targetAudience": [
+                        "Healthcare Providers",
+                        "General Public"
+                    ],
+                    "isDeployed": true,
+                    "deploymentLocation": "USA, Canada, UK"
+                },
+                {
+                    "projectName": "MediTrack",
+                    "projectDescription": "Medical supply chain tracking system for rural healthcare facilities",
+                    "projectURL": "https://github.com/meditrack",
+                    "healthFocusAreas": [
+                        "Healthcare Access",
+                        "Medical Research"
+                    ],
+                    "sdg3Targets": [
+                        "3.1 Reduce maternal mortality",
+                        "3.2 End preventable newborn and child deaths"
+                    ],
+                    "technologiesUsed": [
+                        "Database System",
+                        "Web Application"
+                    ],
+                    "targetAudience": [
+                        "Healthcare Providers",
+                        "Government Agencies"
+                    ],
+                    "isDeployed": true,
+                    "deploymentLocation": "Kenya, Rwanda, Uganda"
+                },
+                {
+                    "projectName": "EpiTracker",
+                    "projectDescription": "Real-time epidemic monitoring and prediction system",
+                    "projectURL": "https://github.com/epitracker",
+                    "healthFocusAreas": [
+                        "Infectious Disease Control",
+                        "Medical Research"
+                    ],
+                    "sdg3Targets": [
+                        "3.3 End epidemics (AIDS, TB, malaria, etc.)"
+                    ],
+                    "technologiesUsed": [
+                        "AI/ML Model",
+                        "Data Visualization"
+                    ],
+                    "targetAudience": [
+                        "Researchers",
+                        "Government Agencies",
+                        "Non-profits & NGOs"
+                    ],
+                    "isDeployed": true,
+                    "deploymentLocation": "Global"
+                }
+            ]
+        };
         
-        // For demonstration purposes, we've hardcoded the data in the HTML
+        // Function to create project cards
+        function createProjectCard(project) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            
+            const header = document.createElement('div');
+            header.className = 'project-header';
+            
+            // Project Title and Description
+            const title = document.createElement('h3');
+            title.className = 'project-title';
+            title.textContent = project.projectName;
+            
+            const description = document.createElement('p');
+            description.className = 'project-description';
+            description.textContent = project.projectDescription;
+            
+            // Project URL
+            const url = document.createElement('a');
+            url.className = 'project-url';
+            url.href = project.projectURL;
+            url.target = '_blank';
+            
+            const urlIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            urlIcon.setAttribute('class', 'project-url-icon');
+            urlIcon.setAttribute('viewBox', '0 0 24 24');
+            urlIcon.setAttribute('fill', 'none');
+            urlIcon.setAttribute('stroke', 'currentColor');
+            urlIcon.setAttribute('stroke-width', '2');
+            urlIcon.setAttribute('stroke-linecap', 'round');
+            urlIcon.setAttribute('stroke-linejoin', 'round');
+            
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', 'M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22');
+            
+            urlIcon.appendChild(path);
+            url.appendChild(urlIcon);
+            url.appendChild(document.createTextNode(project.projectURL.replace('https://github.com/', '')));
+            
+            header.appendChild(title);
+            header.appendChild(description);
+            header.appendChild(url);
+            
+            // Project Body
+            const body = document.createElement('div');
+            body.className = 'project-body';
+            
+            // Health Focus Areas
+            const healthFocusSection = document.createElement('div');
+            healthFocusSection.className = 'info-section';
+            
+            const healthFocusTitle = document.createElement('h4');
+            healthFocusTitle.className = 'section-title';
+            healthFocusTitle.textContent = 'Health Focus Areas';
+            
+            const healthFocusTags = document.createElement('div');
+            healthFocusTags.className = 'tag-container';
+            
+            project.healthFocusAreas.forEach(area => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.textContent = area;
+                healthFocusTags.appendChild(tag);
+            });
+            
+            healthFocusSection.appendChild(healthFocusTitle);
+            healthFocusSection.appendChild(healthFocusTags);
+            
+            // SDG 3 Targets
+            const sdgSection = document.createElement('div');
+            sdgSection.className = 'info-section';
+            
+            const sdgTitle = document.createElement('h4');
+            sdgTitle.className = 'section-title';
+            sdgTitle.textContent = 'SDG 3 Targets';
+            
+            const sdgTags = document.createElement('div');
+            sdgTags.className = 'tag-container';
+            
+            project.sdg3Targets.forEach(target => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.textContent = target;
+                sdgTags.appendChild(tag);
+            });
+            
+            sdgSection.appendChild(sdgTitle);
+            sdgSection.appendChild(sdgTags);
+            
+            // Technologies Used
+            const techSection = document.createElement('div');
+            techSection.className = 'info-section';
+            
+            const techTitle = document.createElement('h4');
+            techTitle.className = 'section-title';
+            techTitle.textContent = 'Technologies Used';
+            
+            const techTags = document.createElement('div');
+            techTags.className = 'tag-container';
+            
+            project.technologiesUsed.forEach(tech => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.textContent = tech;
+                techTags.appendChild(tag);
+            });
+            
+            techSection.appendChild(techTitle);
+            techSection.appendChild(techTags);
+            
+            // Target Audience
+            const audienceSection = document.createElement('div');
+            audienceSection.className = 'info-section';
+            
+            const audienceTitle = document.createElement('h4');
+            audienceTitle.className = 'section-title';
+            audienceTitle.textContent = 'Target Audience';
+            
+            const audienceTags = document.createElement('div');
+            audienceTags.className = 'tag-container';
+            
+            project.targetAudience.forEach(audience => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.textContent = audience;
+                audienceTags.appendChild(tag);
+            });
+            
+            audienceSection.appendChild(audienceTitle);
+            audienceSection.appendChild(audienceTags);
+            
+            // Deployment Status
+            const deploymentSection = document.createElement('div');
+            deploymentSection.className = 'info-section';
+            
+            const deploymentTitle = document.createElement('h4');
+            deploymentTitle.className = 'section-title';
+            deploymentTitle.textContent = 'Deployment Status';
+            
+            const deploymentStatus = document.createElement('div');
+            deploymentStatus.className = 'deployment-status';
+            
+            const statusIndicator = document.createElement('span');
+            statusIndicator.className = project.isDeployed ? 'status-indicator active' : 'status-indicator inactive';
+            
+            const statusText = document.createElement('span');
+            statusText.className = 'status-text';
+            statusText.textContent = project.isDeployed ? 'Active - Currently Deployed' : 'Inactive - Not Deployed';
+            
+            deploymentStatus.appendChild(statusIndicator);
+            deploymentStatus.appendChild(statusText);
+            
+            const deploymentLocation = document.createElement('p');
+            deploymentLocation.className = 'deployment-location';
+            deploymentLocation.textContent = project.isDeployed ? `Deployed in: ${project.deploymentLocation}` : `Planned for: ${project.deploymentLocation}`;
+            
+            deploymentSection.appendChild(deploymentTitle);
+            deploymentSection.appendChild(deploymentStatus);
+            deploymentSection.appendChild(deploymentLocation);
+            
+            // Append all sections to the body
+            body.appendChild(healthFocusSection);
+            body.appendChild(sdgSection);
+            body.appendChild(techSection);
+            body.appendChild(audienceSection);
+            body.appendChild(deploymentSection);
+            
+            // Assemble the card
+            card.appendChild(header);
+            card.appendChild(body);
+            
+            return card;
+        }
+        
+        // Function to render all projects
+        function renderProjects(projects) {
+            const projectsGrid = document.getElementById('projectsGrid');
+            projectsGrid.innerHTML = '';
+            
+            if (projects.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.textContent = 'No projects found matching your criteria.';
+                projectsGrid.appendChild(noResults);
+                return;
+            }
+            
+            projects.forEach(project => {
+                const card = createProjectCard(project);
+                projectsGrid.appendChild(card);
+            });
+        }
+        
+        // Function to filter projects based on search and filter criteria
+        function filterProjects() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const healthFocus = document.getElementById('healthFocusFilter').value;
+            const sdgTarget = document.getElementById('sdgTargetFilter').value;
+            const technology = document.getElementById('technologyFilter').value;
+            const deploymentStatus = document.getElementById('deploymentFilter').value;
+            
+            const filteredProjects = projectsData.projects.filter(project => {
+                // Search term filter (check if search term is in project name or description)
+                const matchesSearch = searchTerm === '' || 
+                    project.projectName.toLowerCase().includes(searchTerm) || 
+                    project.projectDescription.toLowerCase().includes(searchTerm);
+                
+                // Health focus filter
+                const matchesHealthFocus = healthFocus === '' || 
+                    project.healthFocusAreas.includes(healthFocus);
+                
+                // SDG target filter
+                const matchesSdgTarget = sdgTarget === '' || 
+                    project.sdg3Targets.some(target => target.startsWith(sdgTarget));
+                
+                // Technology filter
+                const matchesTechnology = technology === '' || 
+                    project.technologiesUsed.includes(technology);
+                
+                // Deployment status filter
+                const matchesDeployment = deploymentStatus === '' || 
+                    project.isDeployed.toString() === deploymentStatus;
+                
+                return matchesSearch && matchesHealthFocus && matchesSdgTarget && 
+                       matchesTechnology && matchesDeployment;
+            });
+            
+            renderProjects(filteredProjects);
+        }
+        
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render all projects initially
+            renderProjects(projectsData.projects);
+            
+            // Add event listeners for search and filters
+            document.getElementById('searchButton').addEventListener('click', filterProjects);
+            document.getElementById('searchInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    filterProjects();
+                }
+            });
+            
+            document.getElementById('healthFocusFilter').addEventListener('change', filterProjects);
+            document.getElementById('sdgTargetFilter').addEventListener('change', filterProjects);
+            document.getElementById('technologyFilter').addEventListener('change', filterProjects);
+            document.getElementById('deploymentFilter').addEventListener('change', filterProjects);
+            
+            document.getElementById('resetButton').addEventListener('click', function() {
+                // Reset all filters and search
+                document.getElementById('searchInput').value = '';
+                document.getElementById('healthFocusFilter').value = '';
+                document.getElementById('sdgTargetFilter').value = '';
+                document.getElementById('technologyFilter').value = '';
+                document.getElementById('deploymentFilter').value = '';
+                
+                // Show all projects
+                renderProjects(projectsData.projects);
+            });
+        });
     </script>
 </body>
 
