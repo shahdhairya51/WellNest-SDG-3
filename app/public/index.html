@@ -6,67 +6,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SDG 3 Project Classification Form</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+        :root {
+            --primary-color: #4285F4;
+            --primary-hover: #3367D6;
+            --secondary-color: #6C63FF;
+            --secondary-hover: #5A52D5;
+            --success-color: #34A853;
+            --success-hover: #2E8F49;
+            --error-color: #EA4335;
+            --border-color: #DADCE0;
+            --bg-light: #F8F9FA;
+            --text-primary: #202124;
+            --text-secondary: #5F6368;
+            --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+            --shadow-md: 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+            --radius: 8px;
+        }
+        
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-light);
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
             max-width: 1000px;
             margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-md);
         }
         
         h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.75rem;
+            font-weight: 600;
         }
         
-        form div {
-            margin-bottom: 15px;
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1rem;
         }
         
-        label {
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
         }
         
-        input[type="text"],
-        input[type="url"] {
+        .form-control {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: all 0.2s ease;
         }
         
-        button {
-            background-color: #3498db;
-            color: white;
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.625rem 1.25rem;
             border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
-            margin-right: 5px;
+            transition: all 0.2s ease;
         }
         
-        button:hover {
-            background-color: #2980b9;
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
         }
         
-        .checkbox-group {
-            margin-bottom: 5px;
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
         }
         
-        pre {
-            background-color: #f8f8f8;
-            padding: 15px;
-            border-radius: 4px;
-            overflow-x: auto;
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-hover);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: var(--success-hover);
+        }
+        
+        .btn-icon {
+            margin-right: 0.5rem;
+            width: 16px;
+            height: 16px;
+        }
+        
+        #readmePreview {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-light);
+            white-space: pre-wrap;
+            display: none;
+            font-family: monospace;
+            font-size: 0.875rem;
         }
         
         #statusMessage {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            display: none;
         }
         
         .success {
@@ -83,57 +185,234 @@
             background-color: #e9ecef;
             color: #495057;
         }
-
-        #readmePreview {
-            max-height: 300px;
-            overflow-y: auto;
-            margin-top: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
+        
+        .category-section {
+            background-color: var(--bg-light);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .checkbox-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
             border-radius: 4px;
-            background-color: #f9f9f9;
-            white-space: pre-wrap;
-            display: none;
+            transition: background-color 0.2s ease;
+        }
+        
+        .checkbox-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .checkbox-label {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            font-size: 0.875rem;
+        }
+        
+        .checkbox-input {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .checkbox-custom {
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 4px;
+            margin-right: 8px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox-input:checked + .checkbox-custom {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .checkbox-input:checked + .checkbox-custom::after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 6px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 24px;
+            transition: .4s;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+        
+        .toggle-input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+        
+        .toggle-input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-label {
+            margin-left: 10px;
+            font-size: 0.875rem;
+        }
+        
+        pre#jsonOutput {
+            background-color: var(--bg-light);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .checkbox-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>SDG 3 Project Classification and Impact Assessment</h1>
+    <div class="container">
+        <div class="card">
+            <h1>SDG 3 Project Classification and Impact Assessment</h1>
+            <p class="subtitle">Categorize open-source projects contributing to Good Health and Well-Being</p>
 
-    <div id="statusMessage" style="display: none;"></div>
+            <div id="statusMessage"></div>
 
-    <form id="projectForm">
-        <!-- Project information fields -->
-        <div>
-            <label for="projectName">Name of the open-source project</label>
-            <input type="text" id="projectName" name="projectName" required>
+            <form id="projectForm">
+                <!-- Project information fields -->
+                <div class="form-group">
+                    <label for="projectName" class="form-label">Name of the open-source project</label>
+                    <input type="text" id="projectName" name="projectName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDescription" class="form-label">Brief description of the project</label>
+                    <input type="text" id="projectDescription" name="projectDescription" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectURL" class="form-label">GitHub repository URL</label>
+                    <input type="url" id="projectURL" name="projectURL" class="form-control" placeholder="https://github.com/username/repo" required>
+                    <div class="btn-group">
+                        <button type="button" id="fetchReadmeBtn" class="btn btn-primary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Fetch README
+                        </button>
+                        <button type="button" id="analyzeReadmeBtn" class="btn btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="8"></line>
+                            </svg>
+                            Analyze with AI
+                        </button>
+                    </div>
+                </div>
+
+                <div id="readmePreview">
+                    <!-- README content will be displayed here -->
+                </div>
+
+                <!-- Dynamic form elements will be inserted here -->
+                <div id="formFields"></div>
+            </form>
+
+            <button type="button" id="generateJSONBtn" class="btn btn-success">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <line x1="10" y1="9" x2="8" y2="9"></line>
+                </svg>
+                Generate JSON
+            </button>
         </div>
-        <div>
-            <label for="projectDescription">Brief description of the project</label>
-            <input type="text" id="projectDescription" name="projectDescription" required>
+
+        <div class="card">
+            <h3>Generated JSON:</h3>
+            <pre id="jsonOutput"></pre>
         </div>
-        <div>
-            <label for="projectURL">GitHub repository URL</label>
-            <input type="url" id="projectURL" name="projectURL" placeholder="https://github.com/username/repo" required>
-            <div style="margin-top: 10px;">
-                <button type="button" id="fetchReadmeBtn">Fetch README</button>
-                <button type="button" id="analyzeReadmeBtn">Analyze with AI</button>
-            </div>
-        </div>
-
-        <div id="readmePreview">
-            <!-- README content will be displayed here -->
-        </div>
-
-        <!-- Dynamic form elements will be inserted here -->
-        <div id="formFields"></div>
-    </form>
-
-    <button type="button" id="generateJSONBtn">Generate JSON</button>
-
-    <h3>Generated JSON:</h3>
-    <pre id="jsonOutput"></pre>
+    </div>
 
     <script>
         // JSON schema definition
@@ -259,55 +538,93 @@
                 
                 const fieldData = schema.properties[field];
 
-                // Create a field wrapper div
-                const fieldWrapper = document.createElement('div');
-                fieldWrapper.style.marginBottom = '20px';
+                // Create a section for the field
+                const section = document.createElement('div');
+                section.className = 'category-section';
 
-                // Create label for the field
-                const label = document.createElement('label');
-                label.setAttribute('for', field);
-                label.textContent = fieldData.description || field;
-                fieldWrapper.appendChild(label);
+                // Create title for the section
+                const sectionTitle = document.createElement('h3');
+                sectionTitle.className = 'category-title';
+                sectionTitle.textContent = fieldData.description || field;
+                section.appendChild(sectionTitle);
 
                 if (fieldData.type === "array") {
+                    // Create container for checkboxes
+                    const checkboxContainer = document.createElement('div');
+                    checkboxContainer.className = 'checkbox-container';
+                    
                     // For array fields, create checkboxes
                     fieldData.items.enum.forEach(option => {
-                        const checkboxWrapper = document.createElement('div');
-                        checkboxWrapper.className = 'checkbox-group';
-
+                        const checkboxItem = document.createElement('div');
+                        checkboxItem.className = 'checkbox-item';
+                        
+                        const label = document.createElement('label');
+                        label.className = 'checkbox-label';
+                        
                         const checkbox = document.createElement('input');
+                        checkbox.className = 'checkbox-input';
                         checkbox.type = "checkbox";
                         checkbox.id = `${field}_${option.replace(/\s+/g, '_').replace(/[^\w\s]/g, '')}`;
                         checkbox.name = field;
                         checkbox.value = option;
-
-                        const checkboxLabel = document.createElement('label');
-                        checkboxLabel.setAttribute('for', `${field}_${option.replace(/\s+/g, '_').replace(/[^\w\s]/g, '')}`);
-                        checkboxLabel.textContent = option;
-                        checkboxLabel.style.display = 'inline';
-                        checkboxLabel.style.fontWeight = 'normal';
-                        checkboxLabel.style.marginLeft = '5px';
-
-                        checkboxWrapper.appendChild(checkbox);
-                        checkboxWrapper.appendChild(checkboxLabel);
-                        fieldWrapper.appendChild(checkboxWrapper);
+                        
+                        const customCheckbox = document.createElement('span');
+                        customCheckbox.className = 'checkbox-custom';
+                        
+                        label.appendChild(checkbox);
+                        label.appendChild(customCheckbox);
+                        label.appendChild(document.createTextNode(option));
+                        
+                        checkboxItem.appendChild(label);
+                        checkboxContainer.appendChild(checkboxItem);
                     });
+                    
+                    section.appendChild(checkboxContainer);
+                    
                 } else if (fieldData.type === "boolean") {
-                    const checkbox = document.createElement('input');
-                    checkbox.type = "checkbox";
-                    checkbox.id = field;
-                    checkbox.name = field;
-                    fieldWrapper.appendChild(checkbox);
+                    const toggleContainer = document.createElement('div');
+                    toggleContainer.className = 'toggle-container';
+                    
+                    const toggleSwitch = document.createElement('label');
+                    toggleSwitch.className = 'toggle-switch';
+                    
+                    const toggleInput = document.createElement('input');
+                    toggleInput.className = 'toggle-input';
+                    toggleInput.type = "checkbox";
+                    toggleInput.id = field;
+                    toggleInput.name = field;
+                    
+                    const toggleSlider = document.createElement('span');
+                    toggleSlider.className = 'toggle-slider';
+                    
+                    const toggleLabel = document.createElement('span');
+                    toggleLabel.className = 'toggle-label';
+                    toggleLabel.textContent = 'Yes';
+                    
+                    toggleSwitch.appendChild(toggleInput);
+                    toggleSwitch.appendChild(toggleSlider);
+                    
+                    toggleContainer.appendChild(toggleSwitch);
+                    toggleContainer.appendChild(toggleLabel);
+                    
+                    section.appendChild(toggleContainer);
+                    
                 } else if (fieldData.type === "string" && field === "deploymentLocation") {
+                    const formGroup = document.createElement('div');
+                    formGroup.className = 'form-group';
+                    
                     const input = document.createElement('input');
                     input.type = "text";
                     input.id = field;
                     input.name = field;
-                    fieldWrapper.appendChild(input);
+                    input.className = 'form-control';
+                    
+                    formGroup.appendChild(input);
+                    section.appendChild(formGroup);
                 }
 
-                // Append the field wrapper to the form
-                formFields.appendChild(fieldWrapper);
+                // Append the section to the form
+                formFields.appendChild(section);
             }
         }
 

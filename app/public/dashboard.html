@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDG 3 Project Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #4285F4;
+            --primary-hover: #3367D6;
+            --secondary-color: #6C63FF;
+            --secondary-hover: #5A52D5;
+            --success-color: #34A853;
+            --success-hover: #2E8F49;
+            --error-color: #EA4335;
+            --border-color: #DADCE0;
+            --bg-light: #F8F9FA;
+            --text-primary: #202124;
+            --text-secondary: #5F6368;
+            --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+            --shadow-md: 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+            --radius: 8px;
+            --chart-color-1: #4285F4;
+            --chart-color-2: #34A853;
+            --chart-color-3: #FBBC05;
+            --chart-color-4: #EA4335;
+            --chart-color-5: #6C63FF;
+            --chart-color-6: #36C5F0;
+            --chart-color-7: #FF6D00;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-light);
+            padding: 0;
+            margin: 0;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            margin: 2rem auto;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .card-full {
+            grid-column: span 12;
+        }
+        
+        .card-half {
+            grid-column: span 6;
+        }
+        
+        .card-third {
+            grid-column: span 4;
+        }
+        
+        .project-info {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+        }
+        
+        .project-title {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .project-url {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .project-url:hover {
+            text-decoration: underline;
+        }
+        
+        .project-url-icon {
+            margin-right: 0.5rem;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            background-color: var(--bg-light);
+            border-radius: 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .tag-icon {
+            margin-right: 0.5rem;
+            width: 14px;
+            height: 14px;
+        }
+        
+        .deployment-status {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .status-indicator.active {
+            background-color: var(--success-color);
+        }
+        
+        .status-indicator.inactive {
+            background-color: var(--error-color);
+        }
+        
+        .status-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .deployment-location {
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .chart-container {
+            height: 250px;
+            position: relative;
+        }
+        
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 0.5rem;
+        }
+        
+        .chart-bar {
+            display: flex;
+            height: 100%;
+            align-items: flex-end;
+        }
+        
+        .chart-column {
+            flex: 1;
+            margin: 0 0.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .chart-column-bar {
+            width: 100%;
+            background-color: var(--chart-color-1);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease;
+        }
+        
+        .chart-column-label {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+        
+        .doughnut-chart {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        
+        .doughnut-segment {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            clip: rect(0, 100px, 200px, 0);
+        }
+        
+        .doughnut-center {
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .sdg-targets-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        
+        .sdg-target-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sdg-target-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .sdg-target-marker {
+            min-width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+        
+        .sdg-target-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-icon {
+            margin-right: 0.5rem;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .health-focus-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .health-focus-item {
+            background-color: var(--bg-light);
+            border-left: 3px solid var(--chart-color-1);
+            padding: 0.75rem;
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+        
+        .health-focus-item:nth-child(2) {
+            border-left-color: var(--chart-color-2);
+        }
+        
+        .health-focus-item:nth-child(3) {
+            border-left-color: var(--chart-color-3);
+        }
+        
+        .health-focus-item:nth-child(4) {
+            border-left-color: var(--chart-color-4);
+        }
+        
+        .health-focus-item:nth-child(5) {
+            border-left-color: var(--chart-color-5);
+        }
+        
+        .health-focus-item:nth-child(6) {
+            border-left-color: var(--chart-color-6);
+        }
+        
+        .health-focus-item:nth-child(7) {
+            border-left-color: var(--chart-color-7);
+        }
+        
+        .technologies-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .technology-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-light);
+            padding: 1rem;
+            border-radius: var(--radius);
+            width: calc(33.333% - 0.667rem);
+            text-align: center;
+        }
+        
+        .technology-icon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .technology-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .audience-chart {
+            display: flex;
+            height: 24px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 1.5rem;
+        }
+        
+        .audience-segment {
+            height: 100%;
+        }
+        
+        .audience-segment:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+        
+        .audience-segment:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+        
+        @media (max-width: 1024px) {
+            .card-third {
+                grid-column: span 6;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-half, .card-third {
+                grid-column: span 12;
+            }
+            
+            .health-focus-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .technology-item {
+                width: calc(50% - 0.5rem);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .technology-item {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1 class="page-title">SDG 3 Project Dashboard</h1>
+                <a href="#" class="btn btn-primary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                    Export Report
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-container">
+            <!-- Project Information Card -->
+            <div class="dashboard-card card-full">
+                <div class="project-info">
+                    <h2 class="project-title">OpenMRS</h2>
+                    <p class="project-description">An open-source medical record system platform for developing countries focusing on supporting the delivery of healthcare in resource-constrained environments.</p>
+                    <a href="https://github.com/openmrs/openmrs-core" target="_blank" class="project-url">
+                        <svg class="project-url-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                        github.com/openmrs/openmrs-core
+                    </a>
+                </div>
+            </div>
+
+            <!-- Health Focus Areas Card -->
+            <div class="dashboard-card card-half">
+                <h3 class="card-title">Health Focus Areas</h3>
+                <div class="health-focus-grid">
+                    <div class="health-focus-item">
+                        <span>Healthcare Access</span>
+                    </div>
+                    <div class="health-focus-item">
+                        <span>Disease Prevention</span>
+                    </div>
+                    <div class="health-focus-item">
+                        <span>Medical Research</span>
+                    </div>
+                    <div class="health-focus-item">
+                        <span>Infectious Disease Control</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deployment Status Card -->
+            <div class="dashboard-card card-half">
+                <h3 class="card-title">Deployment Status</h3>
+                <div class="deployment-status">
+                    <span class="status-indicator active"></span>
+                    <span class="status-text">Active - Currently Deployed</span>
+                </div>
+                <p class="deployment-location">
+                    Deployed in: Over 40 countries across Africa, Asia, and Latin America, including Kenya, Rwanda, Uganda, Mozambique, Bangladesh, and Haiti
+                </p>
+            </div>
+
+            <!-- SDG 3 Targets Card -->
+            <div class="dashboard-card card-half">
+                <h3 class="card-title">SDG 3 Targets Addressed</h3>
+                <ul class="sdg-targets-list">
+                    <li class="sdg-target-item">
+                        <div class="sdg-target-marker">3.1</div>
+                        <div class="sdg-target-text">Reduce maternal mortality</div>
+                    </li>
+                    <li class="sdg-target-item">
+                        <div class="sdg-target-marker">3.2</div>
+                        <div class="sdg-target-text">End preventable newborn and child deaths</div>
+                    </li>
+                    <li class="sdg-target-item">
+                        <div class="sdg-target-marker">3.3</div>
+                        <div class="sdg-target-text">End epidemics (AIDS, TB, malaria, etc.)</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Technologies Used Card -->
+            <div class="dashboard-card card-half">
+                <h3 class="card-title">Technologies Used</h3>
+                <div class="technologies-container">
+                    <div class="technology-item">
+                        <svg class="technology-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <span class="technology-name">Web Application</span>
+                    </div>
+                    <div class="technology-item">
+                        <svg class="technology-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                        <span class="technology-name">Database System</span>
+                    </div>
+                    <div class="technology-item">
+                        <svg class="technology-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        <span class="technology-name">Data Visualization</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Target Audience Card -->
+            <div class="dashboard-card card-third">
+                <h3 class="card-title">Target Audience</h3>
+                <div class="tag-container">
+                    <div class="tag">
+                        <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                        Healthcare Providers
+                    </div>
+                    <div class="tag">
+                        <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Researchers
+                    </div>
+                    <div class="tag">
+                        <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        Government Agencies
+                    </div>
+                    <div class="tag">
+                        <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Non-profits & NGOs
+                    </div>
+                </div>
+                <div class="audience-chart">
+                    <div class="audience-segment" style="background-color: var(--chart-color-1); width: 40%;"></div>
+                    <div class="audience-segment" style="background-color: var(--chart-color-2); width: 25%;"></div>
+                    <div class="audience-segment" style="background-color: var(--chart-color-3); width: 20%;"></div>
+                    <div class="audience-segment" style="background-color: var(--chart-color-4); width: 15%;"></div>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--chart-color-1);"></span>
+                        <span>Healthcare Providers</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--chart-color-2);"></span>
+                        <span>Researchers</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--chart-color-3);"></span>
+                        <span>Government</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--chart-color-4);"></span>
+                        <span>NGOs</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Impact Card -->
+            <div class="dashboard-card card-third">
+                <h3 class="card-title">Project Impact</h3>
+                <div class="chart-container">
+                    <div class="chart-bar">
+                        <div class="chart-column">
+                            <div class="chart-column-bar" style="height: 60%; background-color: var(--chart-color-1);"></div>
+                            <span class="chart-column-label">2020</span>
+                        </div>
+                        <div class="chart-column">
+                            <div class="chart-column-bar" style="height: 75%; background-color: var(--chart-color-1);"></div>
+                            <span class="chart-column-label">2021</span>
+                        </div>
+                        <div class="chart-column">
+                            <div class="chart-column-bar" style="height: 85%; background-color: var(--chart-color-1);"></div>
+                            <span class="chart-column-label">2022</span>
+                        </div>
+                        <div class="chart-column">
+                            <div class="chart-column-bar" style="height: 95%; background-color: var(--chart-color-1);"></div>
+                            <span class="chart-column-label">2023</span>
+                        </div>
+                        <div class="chart-column">
+                            <div class="chart-column-bar" style="height: 100%; background-color: var(--chart-color-1);"></div>
+                            <span class="chart-column-label">2024</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--chart-color-1);"></span>
+                        <span>Deployment Growth</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SDG Progress Card -->
+            <div class="dashboard-card card-third">
+                <h3 class="card-title">SDG Progress Contribution</h3>
+                <div class="doughnut-chart">
+                    <div class="doughnut-segment" style="background-color: var(--chart-color-1); transform: rotate(0deg);"></div>
+                    <div class="doughnut-segment" style="background-color: var(--chart-color-2); transform: rotate(90deg);"></div>
+                    <div class="doughnut-segment" style="background-color: var(--chart-color-3); transform: rotate(180deg);"></div>
+                    <div class="doughnut-segment" style="background-color: var(--chart-color-4); transform: rotate(270deg);"></div>
+                    <div class="doughnut-center">75%</div>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--chart-color-1);"></span>
+                        <span>Target 3.1</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--chart-color-2);"></span>
+                        <span>Target 3.2</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--chart-color-3);"></span>
+                        <span>Target 3.3</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--chart-color-4);"></span>
+                        <span>Other</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // This script would typically contain code to fetch data from an API
+        // and dynamically populate the dashboard with project data
+        
+        // For demonstration purposes, we've hardcoded the data in the HTML
+    </script>
+</body>
+
+</html>
